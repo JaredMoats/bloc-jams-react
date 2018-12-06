@@ -37,6 +37,8 @@ class Album extends Component {
   }
 
   handleSongClick(song) {
+
+    console.log("Song parameter from handleSongClick(): " + song);
     const isSameSong = this.state.currentSong === song;
 
     //if isPlaying and isSameSong are the same, then pause it (calls the pause function)
@@ -46,6 +48,24 @@ class Album extends Component {
       if(!isSameSong) { this.setSong(song) }
       this.play();
     }
+  }
+
+  playIcon(index) {
+
+    const key = index;
+
+    console.log("Index: " + index);
+    console.log("Key: " + key);
+
+    const newHTML = '<span class="icon ion-md-play"></span>';
+    const element = document.querySelector('td');
+    element.outerHTML = newHTML;
+  }
+
+  normalDisplay() {
+    console.log("normalDisplay() triggered");
+
+    const newHTML = '<td></td>';
   }
 
   render() {
@@ -74,7 +94,7 @@ class Album extends Component {
             {
               this.state.album.songs.map( (song, index) =>
                 <tr className="song" key={ index } onClick={ () => this.handleSongClick(song) } >
-                  <td>{ index + 1 }</td>
+                  <td onMouseEnter={ () => this.playIcon(index) }>{ index + 1 }</td>
                   <td>{ song.title }</td>
                   <td>{ song.duration } seconds</td>
                 </tr>
