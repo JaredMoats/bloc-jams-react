@@ -14,6 +14,7 @@ class Album extends Component {
     this.state = {
       album: album,
       currentSong: album.songs[0],
+      hoverSong: album.songs[0],
       isPlaying: false
     };
 
@@ -32,13 +33,14 @@ class Album extends Component {
   }
 
   setSong(song) {
+    console.log("Song being passed to set song: " + song.title);
     this.audioElement.src = song.audioSrc;
     this.setState({ currentSong: song });
   }
 
   handleSongClick(song) {
 
-    console.log("Song parameter from handleSongClick(): " + song);
+    console.log("Song parameter from handleSongClick(): " + song.title);
     const isSameSong = this.state.currentSong === song;
 
     //if isPlaying and isSameSong are the same, then pause it (calls the pause function)
@@ -50,22 +52,21 @@ class Album extends Component {
     }
   }
 
-  playIcon(index) {
 
-    const key = index;
+  pauseIconPlayingSong(song) {
+    if(this.state.isPlaying === true) {
+      console.log("From pauseIconPlayingsong(): The song is playing!");
+    }
+  }
 
-    console.log("Index: " + index);
-    console.log("Key: " + key);
+  playIcon(song) {
+    const isSameSong = this.state.currentSong === song;
 
-    const newHTML = '<span class="icon ion-md-play"></span>';
-    const element = document.querySelector('td');
-    element.outerHTML = newHTML;
+    console.log("The value of isSameSong is: " + isSameSong);
   }
 
   normalDisplay() {
     console.log("normalDisplay() triggered");
-
-    const newHTML = '<td></td>';
   }
 
   render() {
@@ -93,8 +94,14 @@ class Album extends Component {
           <tbody>
             {
               this.state.album.songs.map( (song, index) =>
-                <tr className="song" key={ index } onClick={ () => this.handleSongClick(song) } >
-                  <td onMouseEnter={ () => this.playIcon(index) }>{ index + 1 }</td>
+                <tr
+                className="song"
+                key={ index }
+                onMouseEnter={ () => this.playIcon(song) }
+                onClick={ () => this.handleSongClick(song) }
+                onChange={ () => this.pauseIconPlayingSong(song) }
+                >
+                  <td onClick={ () => this.pauseIconPlayingSong(song) }>{ index + 1 }</td>
                   <td>{ song.title }</td>
                   <td>{ song.duration } seconds</td>
                 </tr>
@@ -106,5 +113,4 @@ class Album extends Component {
     );
   }
 }
-
 export default Album;
