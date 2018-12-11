@@ -101,9 +101,11 @@ class Album extends Component {
                 key={ index }
                 onClick={ () => this.handleSongClick(song) }
                 >
-                  { this.playOrPauseIcon() }
                   <td>
-                    { index + 1 }
+                    <button>
+                      <span className="song-number">{index + 1}</span>
+                      <span className={ this.state.isPlaying ? "icon ion-md-pause" : "icon ion-md-play" }></span>
+                    </button>
                   </td>
                   <td>{ song.title }</td>
                   <td>{ song.duration } seconds</td>
