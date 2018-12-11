@@ -20,7 +20,8 @@ class Album extends Component {
 
     this.audioElement = document.createElement('audio');
     this.audioElement.src = album.songs[0].audioSrc;
-  }
+  } //end of constructor
+
 
   play() {
     this.audioElement.play();
@@ -38,6 +39,19 @@ class Album extends Component {
     this.setState({ currentSong: song });
   }
 
+  playOrPauseIcon = () => {
+    console.log("playOrPauseIcon() is triggering");
+    if(this.state.isPlaying){
+      return(
+        <td><span className="icon ion-md-pause"></span></td>
+      );
+    } else if (!this.state.isPlaying) {
+      return (
+        <td><span className="icon ion-md-play"></span></td>
+      );
+    }
+  };
+
   handleSongClick(song) {
 
     console.log("Song parameter from handleSongClick(): " + song.title);
@@ -50,23 +64,11 @@ class Album extends Component {
       if(!isSameSong) { this.setSong(song) }
       this.play();
     }
-  }
-
-
-  pauseIconPlayingSong(song) {
-    if(this.state.isPlaying === true) {
-      console.log("From pauseIconPlayingsong(): The song is playing!");
-    }
-  }
-
-  playIcon(song) {
-    const isSameSong = this.state.currentSong === song;
-
-    console.log("The value of isSameSong is: " + isSameSong);
-  }
-
-  normalDisplay() {
-    console.log("normalDisplay() triggered");
+    /* JACOB
+      My thought was that the icons would be added to the appropriate song
+      if I called the playOrPauseIcon() function here. However, that's not the
+      case. They only show up if I call the function in the actual list.*/
+    //this.playOrPauseIcon();
   }
 
   render() {
@@ -97,11 +99,12 @@ class Album extends Component {
                 <tr
                 className="song"
                 key={ index }
-                onMouseEnter={ () => this.playIcon(song) }
                 onClick={ () => this.handleSongClick(song) }
-                onChange={ () => this.pauseIconPlayingSong(song) }
                 >
-                  <td onClick={ () => this.pauseIconPlayingSong(song) }>{ index + 1 }</td>
+                  { this.playOrPauseIcon() }
+                  <td>
+                    { index + 1 }
+                  </td>
                   <td>{ song.title }</td>
                   <td>{ song.duration } seconds</td>
                 </tr>
