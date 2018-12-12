@@ -29,7 +29,7 @@ class Album extends Component {
       duration: album.songs[0].duration,
       /* The song's current volume */
       currentVolume: 0.5
-    };
+    }; //h 
 
     this.audioElement = document.createElement('audio');
     this.audioElement.src = album.songs[0].audioSrc;
