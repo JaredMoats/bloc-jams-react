@@ -14,12 +14,14 @@ class Album extends Component {
     this.state = {
       album: album,
       currentSong: album.songs[0],
-      hoverSong: album.songs[0],
-      isPlaying: false
+      isPlaying: false,
+      isHovering: null
     };
 
     this.audioElement = document.createElement('audio');
     this.audioElement.src = album.songs[0].audioSrc;
+
+    console.log(`From constructor: The object in isPlaying is ${this.state.isPlaying}`);
   } //end of constructor
 
 
@@ -39,22 +41,10 @@ class Album extends Component {
     this.setState({ currentSong: song });
   }
 
-  playOrPauseIcon = () => {
-    console.log("playOrPauseIcon() is triggering");
-    if(this.state.isPlaying){
-      return(
-        <td><span className="icon ion-md-pause"></span></td>
-      );
-    } else if (!this.state.isPlaying) {
-      return (
-        <td><span className="icon ion-md-play"></span></td>
-      );
-    }
-  };
-
   handleSongClick(song) {
 
     console.log("Song parameter from handleSongClick(): " + song.title);
+    //If the current song matches the song parameter, isSameSong equals true.
     const isSameSong = this.state.currentSong === song;
 
     //if isPlaying and isSameSong are the same, then pause it (calls the pause function)
@@ -64,11 +54,44 @@ class Album extends Component {
       if(!isSameSong) { this.setSong(song) }
       this.play();
     }
-    /* JACOB
-      My thought was that the icons would be added to the appropriate song
-      if I called the playOrPauseIcon() function here. However, that's not the
-      case. They only show up if I call the function in the actual list.*/
-    //this.playOrPauseIcon();
+  }
+
+  handleMouseEnter(index) {
+    console.log(`You hovered over song (index): ${index}`);
+
+    this.setState({ isHovering: index });
+
+    console.log(`From handleMouseEnter: The value of isHovering is: ${this.state.isHovering}`);
+}
+
+  handleMouseLeave(index) {
+    console.log( `Your stopped hovering over song (index): ${index}`);
+    this.setState({ isHovering: null });
+    console.log(`From handleMouseLeave: The state of isHovering is ${this.state.isHovering}`);
+  }
+
+  playOrPauseIcon(song, index) {
+    //If the current song matches the song parameter, isSameSong equals true.
+    const isSameSong = this.state.currentSong === song;
+    console.log(`From playOrPauseIcon: The value of isHovering is: ${this.state.isHovering}`);
+    //Display the pause icon if isSameSong is true and isPlaying is true.
+    if(isSameSong && this.state.isPlaying){
+      return(
+        <td><button><span className="icon ion-md-pause"></span></button></td>
+      );
+    } else if(isSameSong && !this.state.isPlaying) {
+      return(
+        <td><button><span className="icon ion-md-play"></span></button></td>
+      );
+    }else if(this.state.isHovering === index){
+      return(
+        <td><button><span className="icon ion-md-play"></span></button></td>
+      );
+    } else {
+      return(
+        <td>{ index + 1 }</td>
+      );
+    }
   }
 
   render() {
@@ -100,13 +123,10 @@ class Album extends Component {
                 className="song"
                 key={ index }
                 onClick={ () => this.handleSongClick(song) }
+                onMouseEnter={ () => this.handleMouseEnter(index) }
+                onMouseLeave={ () => this.handleMouseLeave(index) }
                 >
-                  <td>
-                    <button>
-                      <span className="song-number">{index + 1}</span>
-                      <span className={ this.state.isPlaying ? "icon ion-md-pause" : "icon ion-md-play" }></span>
-                    </button>
-                  </td>
+                  { this.playOrPauseIcon(song, index) }
                   <td>{ song.title }</td>
                   <td>{ song.duration } seconds</td>
                 </tr>
