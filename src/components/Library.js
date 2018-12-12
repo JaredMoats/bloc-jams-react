@@ -14,8 +14,7 @@ class Library extends Component {
       //prints the title property of each album.
       <section className="library">
         {
-          //for Jacob: please explain the parameters in this map function
-          //and how the function is working
+          /* First parameter: The album object. Second: The object's index */
           this.state.albums.map( (album, index) =>
             //Links to the album/album.slug. The slug is defined in albums.js
             <Link to={ `/album/${album.slug}` } key={ index }>

@@ -12,9 +12,15 @@ class Album extends Component {
     });
 
     this.state = {
+      /* Ensures we're accessing the album that matches the slug
+      (figured out above) */
       album: album,
+      /* Keeps track of the song currently being manipulated.
+      By default, set to the first song in the album. */
       currentSong: album.songs[0],
+      /* Keeps track of if a song is playing */
       isPlaying: false,
+      /* Keeps track of if a song is being hovered over */
       isHovering: null
     };
 
@@ -24,23 +30,28 @@ class Album extends Component {
     console.log(`From constructor: The object in isPlaying is ${this.state.isPlaying}`);
   } //end of constructor
 
-
+  /* Plays the song */
   play() {
     this.audioElement.play();
     this.setState({ isPlaying: true });
   }
 
+  /* Pauses the song */
   pause() {
     this.audioElement.pause();
     this.setState({ isPlaying: false });
   }
 
+  /* Sets the selected song to the one that's been clicked.
+  This function is called in handleSongClick() */
   setSong(song) {
-    console.log("Song being passed to set song: " + song.title);
     this.audioElement.src = song.audioSrc;
     this.setState({ currentSong: song });
   }
 
+  /* Plays or pauses the clicked song. The parameter
+  is passed to this function from .map() in the class's
+  render() method. Same is true for all other functions.*/
   handleSongClick(song) {
 
     console.log("Song parameter from handleSongClick(): " + song.title);
@@ -70,10 +81,11 @@ class Album extends Component {
     console.log(`From handleMouseLeave: The state of isHovering is ${this.state.isHovering}`);
   }
 
+ /* Handles whether to display play or pause icons, or the song's number */
   playOrPauseIcon(song, index) {
     //If the current song matches the song parameter, isSameSong equals true.
     const isSameSong = this.state.currentSong === song;
-    console.log(`From playOrPauseIcon: The value of isHovering is: ${this.state.isHovering}`);
+
     //Display the pause icon if isSameSong is true and isPlaying is true.
     if(isSameSong && this.state.isPlaying){
       return(
@@ -118,6 +130,10 @@ class Album extends Component {
           </colgroup>
           <tbody>
             {
+              /* Accessing the songs object (song details nested within it)
+              in ./../data/albums.js. Since we know we're accessing the songs
+              object, the first parameter of map is the song details (title, duration,
+              etc.) The second parameter is the index.*/
               this.state.album.songs.map( (song, index) =>
                 <tr
                 className="song"
