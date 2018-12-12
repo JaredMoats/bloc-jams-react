@@ -22,15 +22,17 @@ class Album extends Component {
       /* Keeps track of if a song is playing */
       isPlaying: false,
       /* Keeps track of if a song is being hovered over */
-      isHovering: null
+      isHovering: null,
+      /* Keep track of the songs current time stamp */
+      currentTime: 0,
+      /* The song's total time (currently set to the duration of the first song) */
+      duration: album.songs[0].duration,
+      /* The song's current volume */
+      currentVolume: 0.5
     };
 
     this.audioElement = document.createElement('audio');
     this.audioElement.src = album.songs[0].audioSrc;
-
-    console.log(`From constructor: The object in isPlaying is ${this.state.isPlaying}`);
-
-    console.log(`From constructor: The length of this.state.album.songs is: ${this.state.album.songs.length}`);
   } //end of constructor
 
   /* Plays the song */
@@ -103,13 +105,66 @@ class Album extends Component {
    this.play();
   }
 
+  componentDidMount() {
+    this.eventListeners = {
+      timeupdate: e => {
+        this.setState({ currentTime: this.audioElement.currentTime });
+      },
+      durationchange: e => {
+        this.setState({ duration: this.audioElement.duration });
+      },
+      volumechange: e => {
+        this.setState({ currentVolume: this.audioElement.currentVolume });
+      }
+    };
+    this.audioElement.addEventListener('timeupdate', this.eventListeners.timeupdate);
+    this.audioElement.addEventListener('durationchange', this.eventListeners.durationchange);
+    this.audioElement.addEventListener('volumechange', this.eventListeners.volumechange);
+  }
+
+  componentWillUnmount() {
+    this.audioElement.src = null;
+    this.audioElement.removeEventListener('timeupdate', this.eventListeners.timeupdate);
+    this.audioElement.removeEventListener('durationchange', this.eventListeners.durationchange);
+    this.audioElement.removeEventListener('volumechange', this.eventListeners.onvolumechange);
+  }
+
+  handleTimeChange(e) {
+    /*1.  Calculate a new time in the song. */
+    const newTime = this.audioElement.duration * e.target.value;
+    /*2. Set the currentTime property of this.audioElement to the new time */
+    this.audioElement.currentTime = newTime;
+    this.setState({ currentTime: newTime });
+  }
+
+  handleVolumeChange(e) {
+    /* Calculate the new volume */
+    const newVolume = e.target.value;
+    /* Set the new volume */
+    this.audioElement.currentVolume = newVolume;
+    this.setState({ currentVolume: newVolume });
+  }
+
+  formatTime(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.floor(time - minutes * 60);
+
+    if(seconds <= 9) {
+      return minutes + ":0" + seconds;
+    } else if(seconds > 9) {
+      return minutes + ":" + seconds;
+    } else {
+      return "-:--"
+    }
+  }
+
   handleMouseEnter(index) {
     console.log(`You hovered over song (index): ${index}`);
 
     this.setState({ isHovering: index });
 
     console.log(`From handleMouseEnter: The value of isHovering is: ${this.state.isHovering}`);
-}
+  }
 
   handleMouseLeave(index) {
     console.log( `Your stopped hovering over song (index): ${index}`);
@@ -189,9 +244,15 @@ class Album extends Component {
         <PlayerBar
           isPlaying={ this.state.isPlaying }
           currentSong={ this.state.currentSong }
+          currentTime={ this.audioElement.currentTime }
+          duration={ this.audioElement.duration }
+          currentVolume={ this.audioElement.currentVolume }
           handleSongClick={ () => this.handleSongClick(this.state.currentSong) }
           handlePrevClick={ () => this.handlePrevClick() }
           handleNextClick={ () => this.handleNextClick() }
+          handleTimeChange={ (e) => this.handleTimeChange(e) }
+          handleVolumeChange={ (e) => this.handleVolumeChange(e) }
+          formatTime={ (time) => this.formatTime(time) }
         />
       </section>
     );
