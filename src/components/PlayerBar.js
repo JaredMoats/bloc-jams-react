@@ -18,7 +18,10 @@ class PlayerBar extends Component {
             { /* If isPlaying is true, display the pause icon. Else, display the play icon */  }
             <span className={ this.props.isPlaying ? 'icon ion-md-pause' : 'icon ion-md-play' }></span>
           </button>
-          <button id="next">
+          <button
+            id="next"
+            onClick={ this.props.handleNextClick }
+          >
             <span className="icon ion-md-skip-forward"></span>
           </button>
         </section>

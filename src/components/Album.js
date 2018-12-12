@@ -29,6 +29,8 @@ class Album extends Component {
     this.audioElement.src = album.songs[0].audioSrc;
 
     console.log(`From constructor: The object in isPlaying is ${this.state.isPlaying}`);
+
+    console.log(`From constructor: The length of this.state.album.songs is: ${this.state.album.songs.length}`);
   } //end of constructor
 
   /* Plays the song */
@@ -71,7 +73,8 @@ class Album extends Component {
   handlePrevClick() {
     /* Find the index of the current song */
     const currentIndex = this.state.album.songs.findIndex(song => this.state.currentSong === song);
-    /* Calculate new index by subtracting by 1 */
+    /* Calculate new index by subtracting 1
+    (Math.max returns the great value of the given parameters.)*/
     const newIndex = Math.max(0, currentIndex - 1);
     /* Set a newSong variable to the index of the newIndex */
     const newSong = this.state.album.songs[newIndex];
@@ -79,6 +82,25 @@ class Album extends Component {
     this.setSong(newSong);
     /* Play the new song */
     this.play();
+  }
+
+  handleNextClick() {
+    /* 1. Find the index of the current song */
+    const currentIndex = this.state.album.songs.findIndex(song => this.state.currentSong === song);
+    /* 2. Calculate the new index.  */
+    let newIndex = currentIndex + 1;
+    /* 2A. If the new index is greater than the
+     index of the last song (this.state.album.songs.length - 1),
+     then the index remains the same */
+    if(newIndex > this.state.album.songs.length - 1) {
+      newIndex = currentIndex;
+    }
+   /*3.  Set the newSong variable to the index of the newIndex*/
+   const newSong = this.state.album.songs[newIndex];
+   /* 4. Set the new song */
+   this.setSong(newSong);
+   /* 5. Play the new song */
+   this.play();
   }
 
   handleMouseEnter(index) {
@@ -109,7 +131,7 @@ class Album extends Component {
       return(
         <td><button><span className="icon ion-md-play"></span></button></td>
       );
-    }else if(this.state.isHovering === index){
+    } else if(this.state.isHovering === index){
       return(
         <td><button><span className="icon ion-md-play"></span></button></td>
       );
@@ -169,6 +191,7 @@ class Album extends Component {
           currentSong={ this.state.currentSong }
           handleSongClick={ () => this.handleSongClick(this.state.currentSong) }
           handlePrevClick={ () => this.handlePrevClick() }
+          handleNextClick={ () => this.handleNextClick() }
         />
       </section>
     );
