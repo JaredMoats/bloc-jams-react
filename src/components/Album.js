@@ -28,8 +28,8 @@ class Album extends Component {
       /* The song's total time (currently set to the duration of the first song) */
       duration: album.songs[0].duration,
       /* The song's current volume */
-      currentVolume: 0.5
-    }; //h 
+      currentVolume: 0.5 //how does js know this belongs to this.audioElement?
+    }; //h
 
     this.audioElement = document.createElement('audio');
     this.audioElement.src = album.songs[0].audioSrc;
@@ -235,7 +235,7 @@ class Album extends Component {
                 >
                   { this.playOrPauseIcon(song, index) }
                   <td>{ song.title }</td>
-                  <td>{ song.duration } seconds</td>
+                  <td>{ this.formatTime(song.duration) } seconds</td>
                 </tr>
               )
             }
