@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import albumData from './../data/albums';
 import PlayerBar from './PlayerBar';
+import './../css/Album.css';
 
 class Album extends Component {
   constructor(props) {
@@ -201,24 +202,20 @@ class Album extends Component {
     return(
       //the url will match /albums/slug. Provided by React Router.
       <section className="album">
-        <section id="album-info">
+        <section class="album-image">
           <img
             id="album-cover-art"
             src={ this.state.album.albumCover }
             alt={ this.state.album.title }
           />
+        </section>
+        <table id="song-list">
           <div className="album-details">
             <h1 id="album-title">{ this.state.album.title }</h1>
             <h2 className="artist">{ this.state.album.artist }</h2>
             <div id="release-info">{ this.state.album.releaseInfo }</div>
           </div>
-        </section>
-        <table id="song-list">
-          <colgroup>
-            <col id="song-number-column" />
-            <col id="song-title-column" />
-            <col id="song-duration-column" />
-          </colgroup>
+
           <tbody>
             {
               /* Accessing the songs object (song details nested within it)
@@ -240,20 +237,20 @@ class Album extends Component {
               )
             }
           </tbody>
+          <PlayerBar
+            isPlaying={ this.state.isPlaying }
+            currentSong={ this.state.currentSong }
+            currentTime={ this.audioElement.currentTime }
+            duration={ this.audioElement.duration }
+            currentVolume={ this.audioElement.currentVolume }
+            handleSongClick={ () => this.handleSongClick(this.state.currentSong) }
+            handlePrevClick={ () => this.handlePrevClick() }
+            handleNextClick={ () => this.handleNextClick() }
+            handleTimeChange={ (e) => this.handleTimeChange(e) }
+            handleVolumeChange={ (e) => this.handleVolumeChange(e) }
+            formatTime={ (time) => this.formatTime(time) }
+          />
         </table>
-        <PlayerBar
-          isPlaying={ this.state.isPlaying }
-          currentSong={ this.state.currentSong }
-          currentTime={ this.audioElement.currentTime }
-          duration={ this.audioElement.duration }
-          currentVolume={ this.audioElement.currentVolume }
-          handleSongClick={ () => this.handleSongClick(this.state.currentSong) }
-          handlePrevClick={ () => this.handlePrevClick() }
-          handleNextClick={ () => this.handleNextClick() }
-          handleTimeChange={ (e) => this.handleTimeChange(e) }
-          handleVolumeChange={ (e) => this.handleVolumeChange(e) }
-          formatTime={ (time) => this.formatTime(time) }
-        />
       </section>
     );
   }

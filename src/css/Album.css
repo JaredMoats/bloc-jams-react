@@ -1,0 +1,15 @@
+.album {
+  display: flex;
+}
+
+.album-image {
+  margin: 10px 5% 10px 10px;
+}
+
+.album-details {
+  margin-bottom: 50px;
+}
+
+.player-bar {
+  margin-top: 50px;
+}
