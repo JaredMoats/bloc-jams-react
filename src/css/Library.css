@@ -1,0 +1,23 @@
+.library a {
+  display: flex;
+  align-items: center;
+  margin-left: 10%;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #111;
+  font-size: 30px;
+}
+
+.library a:visited {
+  color: #111;
+}
+
+.library a div {
+  margin-left: 15px;
+}
+
+.library a img {
+  height: 300px;
+  width: 300px;
+  object-fit: cover;
+}
